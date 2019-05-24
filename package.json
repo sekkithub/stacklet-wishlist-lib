@@ -6,6 +6,8 @@
   "author": "Masato Arai <masato.arai@wemakewebsites.com>",
   "license": "MIT",
   "private": false,
-  "keywords": ["wishlist"],
+  "keywords": [
+    "wishlist"
+  ],
   "bugs": "https://github.com/sekkithub/stacklet-wishlist-lib/issues"
 }
