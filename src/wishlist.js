@@ -14,6 +14,7 @@ import {on} from './utils';
  */
 const selectors = {
   container: '[js-wishlist="container"]',
+  loading: '[js-wishlist="loading"]',
   list: '[js-wishlist="list"]',
   item: '[js-wishlist="item"]',
   headerIconGroup: '[js-wishlist="header-icon-group"]',
@@ -32,6 +33,7 @@ export default () => {
    */
   const nodeSelectors = {
     container: document.querySelector(selectors.container),
+    loading: document.querySelector(selectors.loading),
     list: document.querySelector(selectors.list),
     headerIconGroup: document.querySelector(selectors.headerIconGroup),
     addButtons: [...document.querySelectorAll(selectors.add)],
@@ -54,7 +56,6 @@ export default () => {
     })
       .then((response) => {
         setHeaderIcon();
-        fillHeartIcons();
         unlockButton(target);
         return response;
       })
@@ -74,7 +75,7 @@ export default () => {
   /**
    * Remove an item from the list
    */
-  function removeItem(customerId, productId) {
+  function removeItem(customerId, productId, target) {
     console.log(`customer ID: ${customerId}`, `product ID: ${productId}`);
 
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
@@ -86,10 +87,12 @@ export default () => {
       },
     })
       .then((response) => {
+        setHeaderIcon();
+
         nodeSelectors.list = document.querySelector(selectors.list);
 
         if (!nodeSelectors.list) {
-          fillHeartIcons();
+          unlockButton(target);
           return response;
         }
 
@@ -194,7 +197,7 @@ export default () => {
   /**
     * Lock a button.
     */
-   function lockButton(button) {
+  function lockButton(button) {
     button.classList.add('is-locked');
   }
 
@@ -226,9 +229,13 @@ export default () => {
 
     const productId = target.getAttribute('data-product-id');
 
-    target.classList.add('is-filled');
-
-    addItem(customerId, productId, target);
+    if (target.classList.contains('is-filled')) {
+      target.classList.remove('is-filled');
+      removeItem(customerId, productId, target);
+    } else {
+      target.classList.add('is-filled');
+      addItem(customerId, productId, target);
+    }
   }
 
   /**
@@ -247,7 +254,7 @@ export default () => {
     const customerId = theme.customer.id;
     const productId = target.getAttribute('data-product-id');
 
-    removeItem(customerId, productId);
+    removeItem(customerId, productId, target);
   }
 
 
@@ -286,9 +293,7 @@ export default () => {
     nodeSelectors.container.appendChild(div);
 
     div.innerHTML += `
-      <p>
-        <span>${theme.strings.noItemMessage}</span>
-      </p>
+      <span>${theme.strings.noItemMessage}</span>
     `;
   }
 
@@ -320,6 +325,7 @@ export default () => {
         const ul = document.createElement('ul');
         ul.classList.add('row', 'wishlist__list');
         ul.setAttribute('js-wishlist', 'list');
+        nodeSelectors.loading.parentNode.removeChild(nodeSelectors.loading);
         nodeSelectors.container.appendChild(ul);
 
         products.forEach((productId) => {

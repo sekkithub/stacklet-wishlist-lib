@@ -43,6 +43,9 @@
       class="wishlist"
       js-wishlist="container"
       data-customer-id="{{ customer_id }}">
+      <div js-wishlist="loading">
+        <span>{{ 'products.product.loading' | t }}</span>
+      </div>
     </div>
 
   {% else %}

@@ -1,3 +1,6 @@
+# Stacklet Wishlist
+
+
 Setup
 
 Set theme settings schema in settings_schema.json
