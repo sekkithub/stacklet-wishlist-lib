@@ -1,6 +1,6 @@
 {
   "name": "stacklet-wishlist-lib",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "/src/wishlist.js",
   "repository": "git@github.com:sekkithub/stacklet-wishlist-lib.git",
   "author": "Masato Arai <masato.arai@wemakewebsites.com>",
