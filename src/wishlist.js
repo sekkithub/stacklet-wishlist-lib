@@ -7,7 +7,7 @@
  */
 
 import axios from 'axios';
-import {on} from '../helpers/utils';
+import {on} from './utils';
 
 /**
  * DOM selectors.
@@ -41,7 +41,7 @@ export default () => {
   /**
    * Add an item to the list
    */
-  function addItem(customerId, productId) {
+  function addItem(customerId, productId, target) {
     console.log(`customer ID: ${customerId}`, `product ID: ${productId}`);
 
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
@@ -55,6 +55,7 @@ export default () => {
       .then((response) => {
         setHeaderIcon();
         fillHeartIcons();
+        unlockButton(target);
         return response;
       })
       .catch((error) => {
@@ -87,14 +88,15 @@ export default () => {
       .then((response) => {
         nodeSelectors.list = document.querySelector(selectors.list);
 
-        if (nodeSelectors.list) {
-          removeItemFromList(productId);
-
-          if (!isItemInWishlist(nodeSelectors.list)) {
-            setNoItemMessage();
-          }
-        } else {
+        if (!nodeSelectors.list) {
           fillHeartIcons();
+          return response;
+        }
+
+        removeItemFromList(productId);
+
+        if (!isItemInWishlist(nodeSelectors.list)) {
+          setNoItemMessage();
         }
 
         return response;
@@ -120,9 +122,9 @@ export default () => {
         const totalItems = response.data.resultsCount;
 
         if (!totalItems || totalItems < 1) {
-          nodeSelectors.headerIconGroup.classList.remove('filled');
+          nodeSelectors.headerIconGroup.classList.remove('is-filled');
         } else {
-          nodeSelectors.headerIconGroup.classList.add('filled');
+          nodeSelectors.headerIconGroup.classList.add('is-filled');
         }
 
         return response;
@@ -160,9 +162,9 @@ export default () => {
         nodeSelectors.addButtons.forEach((button) => {
           const productId = button.getAttribute('data-product-id');
           if (productArray.indexOf(productId) > -1) {
-            button.classList.add('filled');
+            button.classList.add('is-filled');
           } else {
-            button.classList.remove('filled');
+            button.classList.remove('is-filled');
           }
         });
 
@@ -190,6 +192,20 @@ export default () => {
   }
 
   /**
+    * Lock a button.
+    */
+   function lockButton(button) {
+    button.classList.add('is-locked');
+  }
+
+  /**
+    * Unlock a button.
+    */
+  function unlockButton(button) {
+    button.classList.remove('is-locked');
+  }
+
+  /**
     * Handle click event on add button.
     */
   function handleAddEvent(event) {
@@ -198,6 +214,8 @@ export default () => {
     if (!target.matches(selectors.add)) {
       return;
     }
+
+    lockButton(target);
 
     const customerId = theme.customer.id;
 
@@ -208,9 +226,9 @@ export default () => {
 
     const productId = target.getAttribute('data-product-id');
 
-    target.classList.add('filled');
+    target.classList.add('is-filled');
 
-    addItem(customerId, productId);
+    addItem(customerId, productId, target);
   }
 
   /**
@@ -219,7 +237,8 @@ export default () => {
   function handleRemoveEvent(event) {
     const target = event.currentTarget;
     const item = target.closest(selectors.item);
-    item.classList.add('removing');
+    lockButton(target);
+    item.classList.add('is-removing');
 
     if (!target.matches(selectors.remove)) {
       return;
@@ -299,7 +318,7 @@ export default () => {
       .then((response) => {
         const products = response.data.results.data.nodes;
         const ul = document.createElement('ul');
-        ul.classList.add('card-grid', 'wishlist__list');
+        ul.classList.add('row', 'wishlist__list');
         ul.setAttribute('js-wishlist', 'list');
         nodeSelectors.container.appendChild(ul);
 
@@ -313,24 +332,27 @@ export default () => {
           const li = document.createElement('li');
           li.setAttribute('data-product-id', id);
           li.setAttribute('js-wishlist', 'item');
-          li.classList.add('card-grid__item', 'wishlist__item');
+          li.classList.add('col', 's12', 'm4', 'l3', 'wishlist__item');
           ul.appendChild(li);
           li.innerHTML += `
-            <div class="card card--product wishlist__card">
-              <a class="card__link" href="${link}">
-                <div class="card__thumbnail-container">
-                  <img src="${featuredImage}" class="card__thumbnail-image" />
+            <div class="wishlist-card">
+              <a href="${link}">
+                <div class="wishlist-card__thumbnail-container">
+                  <img src="${featuredImage}" class="wishlist-card__thumbnail-image" />
 
                   <div
-                    class="card__button button button--primary button--block button--small"
-                    js-quick-view="toggle" data-product-url="/products/${handle}">
+                    class="button button--primary button--block button--small wishlist-card__button"
+                    js-quick-view="toggle"
+                    data-product-url="/products/${handle}">
                     Quickview
                   </div>
                 </div>
               </a>
           
-              <div class="card__footer">
-                <a class="card__link" href="${link}">${title}</a><br>
+              <div class="wishlist-card__footer">
+                <a class="wishlist-card__link" href="${link}">
+                  ${title}
+                </a>
               </div>
 
               <div
