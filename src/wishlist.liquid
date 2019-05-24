@@ -1,0 +1,50 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Wishlist: Wishlist Snippets
+------------------------------------------------------------------------------
+{% endcomment %}
+
+{% case snippet %}
+  {% when 'header-icon' %}
+    {% if customer %}
+      {% assign wishlistLink = '/pages/wishlist' %}
+    {% else %}
+      {% assign wishlistLink = '/account/login' %}
+    {% endif %}
+    <a
+      href="{{ wishlistLink }}"
+      class="wishlist-icon-group"
+      js-wishlist="header-icon-group"
+    >
+      <div class="wishlist-icon">
+        {% include 'icon-misc' with icon: 'heart' %}
+      </div>
+      <div class="wishlist-icon">
+        {% include 'icon-misc' with icon: 'heart-fill' %}
+      </div>
+    </a>
+
+  {% when 'button-add' %}
+    <div
+      class="wishlist-icon-group wishlist-button wishlist-button--add"
+      js-wishlist="add"
+      data-product-id="{{ product_id }}"
+      data-customer-id="{{ customer_id }}">
+      <div class="wishlist-icon">
+        {% include 'icon-misc' with icon: 'heart' %}
+      </div>
+      <div class="wishlist-icon">
+        {% include 'icon-misc' with icon: 'heart-fill' %}
+      </div>
+    </div>
+
+  {% when 'list' %}
+    <div
+      class="wishlist"
+      js-wishlist="container"
+      data-customer-id="{{ customer_id }}">
+    </div>
+
+  {% else %}
+    <span>No snippet found!</span>  
+{% endcase %}
