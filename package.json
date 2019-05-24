@@ -9,5 +9,8 @@
   "keywords": [
     "wishlist"
   ],
-  "bugs": "https://github.com/sekkithub/stacklet-wishlist-lib/issues"
+  "bugs": "https://github.com/sekkithub/stacklet-wishlist-lib/issues",
+  "dependencies": {
+    "axios": "^0.18.0",
+  }
 }
