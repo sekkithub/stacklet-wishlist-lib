@@ -5,16 +5,17 @@
  */
  .wishlist {
   &__list {
+    display: flex;
+    flex-wrap: wrap;
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  &__card {
-    position: relative;
-  }
-
   &__item {
+    margin-bottom: 1.5rem;
+    margin-left: 0 !important;
+    min-height: 0;
     opacity: 1;
     transition: all 0.2s ease;
     visibility: visible;
@@ -24,6 +25,10 @@
       opacity: 0;
       visibility: hidden;
     }
+  }
+
+  &__card {
+    position: relative;
   }
 }
 

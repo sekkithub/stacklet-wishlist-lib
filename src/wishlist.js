@@ -332,7 +332,7 @@ export default () => {
           const li = document.createElement('li');
           li.setAttribute('data-product-id', id);
           li.setAttribute('js-wishlist', 'item');
-          li.classList.add('col', 's12', 'm4', 'l3', 'wishlist__item');
+          li.classList.add('col', 's6', 'm4', 'l3', 'wishlist__item');
           ul.appendChild(li);
           li.innerHTML += `
             <div class="wishlist-card">
