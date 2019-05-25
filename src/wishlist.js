@@ -43,9 +43,8 @@ export default () => {
   /**
    * Add an item to the list
    */
-  function addItem(customerId, productId, target) {
-    console.log(`customer ID: ${customerId}`, `product ID: ${productId}`);
 
+  function addItem(customerId, productId, callback, target) {
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
 
     axios.get(`${stackletApiEndpoint}/api/wishlist/add-product`, {
@@ -55,8 +54,12 @@ export default () => {
       },
     })
       .then((response) => {
-        setHeaderIcon();
-        unlockButton(target);
+        console.log('Added to wishlist', {
+          customerId: customerId,
+          productId: productId,
+        });
+        
+        callback(target);
         return response;
       })
       .catch((error) => {
@@ -65,9 +68,10 @@ export default () => {
   }
 
   /**
-    * Clear wishlist.
+    * Update Wishlist.
     */
-  function removeItemFromList(productId) {
+  function updateList(productId) {
+    nodeSelectors.list = document.querySelector(selectors.list);
     nodeSelectors.removedItem = nodeSelectors.list.querySelector(`[data-product-id="${productId}"]`);
     nodeSelectors.removedItem.parentNode.removeChild(nodeSelectors.removedItem);
   }
@@ -75,9 +79,7 @@ export default () => {
   /**
    * Remove an item from the list
    */
-  function removeItem(customerId, productId, target) {
-    console.log(`customer ID: ${customerId}`, `product ID: ${productId}`);
-
+  function removeItem(customerId, productId, callback, target) {
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
 
     axios.get(`${stackletApiEndpoint}/api/wishlist/remove-product`, {
@@ -87,21 +89,12 @@ export default () => {
       },
     })
       .then((response) => {
-        setHeaderIcon();
+        console.log('Removed from wishlist', {
+          customerId: customerId,
+          productId: productId,
+        });
 
-        nodeSelectors.list = document.querySelector(selectors.list);
-
-        if (!nodeSelectors.list) {
-          unlockButton(target);
-          return response;
-        }
-
-        removeItemFromList(productId);
-
-        if (!isItemInWishlist(nodeSelectors.list)) {
-          setNoItemMessage();
-        }
-
+        callback(target);
         return response;
       })
       .catch((error) => {
@@ -190,7 +183,16 @@ export default () => {
         return;
       }
 
-      removeItem(customerId, productId);
+      removeItem(customerId, productId, () => {
+        setHeaderIcon();
+        updateList(productId);
+
+        if (isItemInWishlist(nodeSelectors.list)) {
+          return;
+        }
+
+        setNoItemMessage();
+      });
     });
   }
 
@@ -231,10 +233,19 @@ export default () => {
 
     if (target.classList.contains('is-filled')) {
       target.classList.remove('is-filled');
-      removeItem(customerId, productId, target);
+
+      removeItem(customerId, productId, (target) => {
+        setHeaderIcon();
+        unlockButton(target);
+        return response;
+      }, target);
     } else {
       target.classList.add('is-filled');
-      addItem(customerId, productId, target);
+      
+      addItem(customerId, productId, (target) => {
+        setHeaderIcon();
+        unlockButton(target);
+      }, target);
     }
   }
 
@@ -254,7 +265,16 @@ export default () => {
     const customerId = theme.customer.id;
     const productId = target.getAttribute('data-product-id');
 
-    removeItem(customerId, productId, target);
+    removeItem(customerId, productId, () => {
+      setHeaderIcon();
+      updateList(productId);
+
+      if (isItemInWishlist(nodeSelectors.list)) {
+        return;
+      }
+
+      setNoItemMessage();
+    }, target);
   }
 
 
