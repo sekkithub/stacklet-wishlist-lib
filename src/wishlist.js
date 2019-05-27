@@ -17,7 +17,7 @@ const selectors = {
   loading: '[js-wishlist="loading"]',
   list: '[js-wishlist="list"]',
   item: '[js-wishlist="item"]',
-  headerIconGroup: '[js-wishlist="header-icon-group"]',
+  navHeartIconGroup: '[js-wishlist="nav-heart-icon-group"]',
   add: '[js-wishlist="add"]',
   remove: '[js-wishlist="remove"]',
   quickViewBody: '[js-quick-view="body"]',
@@ -34,8 +34,7 @@ export default () => {
   const nodeSelectors = {
     container: document.querySelector(selectors.container),
     loading: document.querySelector(selectors.loading),
-    list: document.querySelector(selectors.list),
-    headerIconGroup: document.querySelector(selectors.headerIconGroup),
+    navHeartIconGroup: document.querySelector(selectors.navHeartIconGroup),
     addButtons: [...document.querySelectorAll(selectors.add)],
     quickViewBody: document.querySelector(selectors.quickViewBody),
   };
@@ -137,9 +136,9 @@ export default () => {
     getList(customerId, (response) => {
       const totalItems = response.data.resultsCount;
       if (!totalItems || totalItems < 1) {
-        nodeSelectors.headerIconGroup.classList.remove('is-filled');
+        nodeSelectors.navHeartIconGroup.classList.remove('is-filled');
       } else {
-        nodeSelectors.headerIconGroup.classList.add('is-filled');
+        nodeSelectors.navHeartIconGroup.classList.add('is-filled');
       }
     });
   }
@@ -178,6 +177,7 @@ export default () => {
    * Set Fallback Message.
    */
   function setFallbackMessage() {
+    nodeSelectors.list = document.querySelector(selectors.list);
     if (isItemInWishlist(nodeSelectors.list)) {
       return;
     }
@@ -417,6 +417,9 @@ export default () => {
   return Object.freeze({
     updateAddButtonsHeartStatus,
     setAddEventHandlerInQuickView,
+    addItem,
+    removeItem,
+    getList,
     init,
   });
 };
