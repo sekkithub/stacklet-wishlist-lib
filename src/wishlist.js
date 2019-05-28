@@ -178,7 +178,7 @@ export default () => {
    */
   function setFallbackMessage() {
     nodeSelectors.list = document.querySelector(selectors.list);
-    if (isItemInWishlist(nodeSelectors.list)) {
+    if (!nodeSelectors.container || isItemInWishlist(nodeSelectors.list)) {
       return;
     }
 
@@ -318,6 +318,10 @@ export default () => {
     * Check item in Wishlist.
     */
   function isItemInWishlist(list) {
+    if (!list) {
+      return;
+    }
+
     return list.hasChildNodes();
   }
 
