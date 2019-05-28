@@ -5,13 +5,6 @@ Wishlist component built with Frame 3.
 
 ### Installation
 
-**npm**
-
-```bash
-npm install stacklet-wishlist-lib --save
-```
-
-
 **yarn**
 
 ```bash
@@ -19,13 +12,28 @@ yarn add stacklet-wishlist-lib
 ```
 
 
+### Stylesheet
+
+**Load stylesheet**
+
+Load Wishlist stylesheet
+
+/src/styles/theme.scss
+```scss
+  /**
+  * Vendors.
+  */
+  @import '~stacklet-wishlist/src/wishlist';
+```
+
 
 ### Settings
 
-**settings_schema.json**
+**Setting Schema**
 
-Set theme settings schema in settings_schema.json
+Set theme settings schema
 
+settings_schema.json
 ```
 [
   ...
@@ -47,13 +55,14 @@ Set theme settings schema in settings_schema.json
 ```
 
 
-**theme-strings.liquid**
+**Theme Strings**
 
 Set strings for
 * a message to display when no items on the list
 * Stacklet App API Endpoint
 * Customer ID
 
+theme-strings.liquid
 ```
   window.theme = {
     strings: {
@@ -73,10 +82,11 @@ Set strings for
 ```
 
 
-**icon-misc.liquid**
+**SVG icons**
 
 Set heart icons
 
+icon-misc.liquid
 ```liquid
 {% case icon %}
   ...
@@ -104,9 +114,11 @@ paste it to in `/src/snippets`.
 
 Set Wishlist Nav in site header
 
-Example
+site-header.liquid
 ```
-{% include 'wishlist' with snippet: 'header-icon' %}
+<div class="site-header__icon">
+  {% include 'wishlist' with snippet: 'header-icon' %}
+</div>
 ```
 
 
@@ -114,7 +126,7 @@ Example
 
 Put `Add to Wishlist` button with the parameters Product ID and Customer ID where ever needed
 
-Example
+Example product-card.liquid
 ```liquid
 <div class="card__wishlist-button">
   {% include 'wishlist' with
@@ -126,72 +138,30 @@ Example
 ```
 
 
-### Stylesheet
+**Remove from Wishlist Button**
 
-**/src/styles/theme.scss**
+Put `Remove from Wishlist` button with the parameters Product ID and Customer ID where ever needed
 
-Load Wishlist stylesheet
-
-```scss
-  /**
-  * Vendors.
-  */
-  @import '~stacklet-wishlist/src/wishlist';
-```
-
-
-### API Methods Examples
-
-**wishlist.init()**
-
-```js
-import wishlist from ‘stacklet-wishlist-lib';
-
-document.addEventListener('DOMContentLoaded', () => {
-  wishlist().init();
-});
-```
-
-
-**wishlist.addItem()**
-
-```liquid
-{% include 'wishlist' with
-  snippet: 'button-add',
-  product_id: product.id,
-  customer_id: customer.id
-%}
-```
-
-```js
-addItem(customerId, productId, callback, target);
-```
-
-
-**wishlist.removeItem()**
-
-Example
+Example liquid
 ```liquid
 <div
   class="wishlist-button wishlist-button--remove"
   js-wishlist="remove"
   data-product-id="${productId}"
-  data-customer-id="${customerId}">
+  data-customer-id="${customerId}"
+>
   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon__close" viewBox="0 0 36 36">
     <path d="M12.51 8.46l-3.17 3.17 1.62 1.62 4 4.08-4 4-1.62 1.55 3.17 3.24 1.62-1.62 4.07-4.07 4.01 4.07 1.55 1.62L27 22.88l-1.62-1.55-4.07-4 4.07-4.08L27 11.63l-3.24-3.17-1.55 1.62-4.01 4.01-4.07-4.01-1.62-1.62z"></path>
   </svg>
 </div>
 ```
 
-```js
-removeItem(customerId, productId, callback, target);
-```
 
-
-**wishlist.getList()**
+**Set Wishlist page and list**
 
 Create a `page.wishlist.liquid` file in `/src/templates`
 
+page.wishlist.liquid
 ```liquid
 <div class="template-page__wishlist">
   <div class="container">
@@ -199,7 +169,10 @@ Create a `page.wishlist.liquid` file in `/src/templates`
       <div class="col s12">
         <h1>{{ page.title }}</h1>
         <div>
-          {% include 'wishlist' with snippet: 'list', customer_id: customer.id %}
+          {% include 'wishlist' with
+            snippet: 'list',
+            customer_id: customer.id
+          %}
         </div>
       </div>
     </div>
@@ -207,20 +180,55 @@ Create a `page.wishlist.liquid` file in `/src/templates`
 </div>
 ```
 
-```js
 
+### API Methods Examples
+
+**init()**
+
+theme.js
+```js
+import wishlist from ‘stacklet-wishlist-lib';
+
+document.addEventListener('DOMContentLoaded', () => {
+  ...
+  wishlist().init();
+  ...
+});
 ```
 
 
-**wishlist.updateAddButtonsHeartStatus()**
+**addItem()**
 
 ```js
-
+/**
+ * @param {String} customerId - Customer ID
+ * @param {String} productId - Product ID needed to add
+ * @param {Function} callback - The callback to run on the event.
+ * @param {Node} target - The element to disable click event during the callback.
+ */
+addItem(customerId, productId, callback, target);
 ```
 
 
-**wishlist.setAddEventHandlerInQuickView()**
+**removeItem()**
 
 ```js
+/**
+ * @param {String} customerId - Customer ID
+ * @param {String} productId - Product ID needed to add
+ * @param {Function} callback - The callback to run on the event.
+ * @param {Node} target - The element to disable click event during the callback.
+ */
+removeItem(customerId, productId, callback, target);
+```
 
+
+**getList()**
+
+```js
+/**
+ * @param {String} customerId - Customer ID
+ * @param {Function} callback - The callback to run on the event.
+ */
+getList(customerId, callback);
 ```
