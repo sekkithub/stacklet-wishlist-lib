@@ -19,6 +19,7 @@ yarn add stacklet-wishlist-lib
 ```
 
 
+
 ### Settings
 
 **settings_schema.json**
