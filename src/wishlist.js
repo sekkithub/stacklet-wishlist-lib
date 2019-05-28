@@ -43,7 +43,7 @@ export default () => {
    * Add an item to the list
    */
 
-  function addItem(customerId, productId, callback, target) {
+  function addProduct(customerId, productId, callback, target) {
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
 
     axios.get(`${stackletApiEndpoint}/api/wishlist/add-product`, {
@@ -83,7 +83,7 @@ export default () => {
   /**
    * Remove an item from the list
    */
-  function removeItem(customerId, productId, callback, target) {
+  function removeProduct(customerId, productId, callback, target) {
     const stackletApiEndpoint = theme.apis.stackletApiEndpoint;
 
     axios.get(`${stackletApiEndpoint}/api/wishlist/remove-product`, {
@@ -197,7 +197,7 @@ export default () => {
         return;
       }
 
-      removeItem(customerId, productId, () => {
+      removeProduct(customerId, productId, () => {
         updateNavHeartStatus();
         updateAddButtonsHeartStatus();
         updateList(productId);
@@ -237,13 +237,13 @@ export default () => {
 
     if (target.classList.contains('is-filled')) {
       target.classList.remove('is-filled');
-      removeItem(customerId, productId, (target) => {
+      removeProduct(customerId, productId, (target) => {
         updateNavHeartStatus();
         unlockButton(target);
       }, target);
     } else {
       target.classList.add('is-filled');
-      addItem(customerId, productId, (target) => {
+      addProduct(customerId, productId, (target) => {
         updateNavHeartStatus();
         updateAddButtonsHeartStatus();
         unlockButton(target);
@@ -267,7 +267,7 @@ export default () => {
       return;
     }
 
-    removeItem(customerId, productId, () => {
+    removeProduct(customerId, productId, () => {
       updateNavHeartStatus();
       updateList(productId);
       setFallbackMessage();
@@ -421,8 +421,8 @@ export default () => {
   return Object.freeze({
     updateAddButtonsHeartStatus,
     setAddEventHandlerInQuickView,
-    addItem,
-    removeItem,
+    addProduct,
+    removeProduct,
     getList,
     init,
   });
