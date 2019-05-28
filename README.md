@@ -82,7 +82,7 @@ Load Wishlist stylesheet
 ```
 
 
-### Set Liquid Files
+### Liquid Files
 
 **SVG icons**
 
@@ -183,11 +183,10 @@ page.wishlist.liquid
 ```
 
 
-### API Methods Examples
+### Usage
 
 **init()**
 
-theme.js
 ```js
 import wishlist from ‘stacklet-wishlist-lib';
 
@@ -198,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
+
+### API Methods
 
 **addItem()**
 
