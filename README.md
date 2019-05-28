@@ -12,21 +12,6 @@ yarn add stacklet-wishlist-lib
 ```
 
 
-### Stylesheet
-
-**Load stylesheet**
-
-Load Wishlist stylesheet
-
-/src/styles/theme.scss
-```scss
-  /**
-  * Vendors.
-  */
-  @import '~stacklet-wishlist/src/wishlist';
-```
-
-
 ### Settings
 
 **Setting Schema**
@@ -81,6 +66,23 @@ theme-strings.liquid
 
 ```
 
+
+### Stylesheet
+
+**Load stylesheet**
+
+Load Wishlist stylesheet
+
+/src/styles/theme.scss
+```scss
+  /**
+  * Vendors.
+  */
+  @import '~stacklet-wishlist/src/wishlist';
+```
+
+
+### Set Liquid Files
 
 **SVG icons**
 
