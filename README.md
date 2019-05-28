@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ### API Methods
 
-**addItem()**
+**addProduct()**
 
 ```js
 /**
@@ -209,11 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {Function} callback - The callback to run on the event.
  * @param {Node} target - The element to disable click event during the callback.
  */
-addItem(customerId, productId, callback, target);
+addProduct(customerId, productId, callback, target);
 ```
 
 
-**removeItem()**
+**removeProduct()**
 
 ```js
 /**
@@ -222,7 +222,7 @@ addItem(customerId, productId, callback, target);
  * @param {Function} callback - The callback to run on the event.
  * @param {Node} target - The element to disable click event during the callback.
  */
-removeItem(customerId, productId, callback, target);
+removeProduct(customerId, productId, callback, target);
 ```
 
 
