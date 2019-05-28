@@ -1,6 +1,7 @@
-### Stacklet Wishlist
+# Stacklet Wishlist
 
-##### Wishlist component built with Frame 3.
+Wishlist component built with Frame 3.
+
 
 ### Installation
 
@@ -10,11 +11,13 @@
 npm install stacklet-wishlist-lib --save
 ```
 
+
 **yarn**
 
 ```bash
 yarn add stacklet-wishlist-lib
 ```
+
 
 ### Settings
 
@@ -42,9 +45,10 @@ Set theme settings schema in settings_schema.json
 ]
 ```
 
+
 **theme-strings.liquid**
 
-Set strings for 
+Set strings for
 * a message to display when no items on the list
 * Stacklet App API Endpoint
 * Customer ID
@@ -67,6 +71,7 @@ Set strings for
 
 ```
 
+
 **icon-misc.liquid**
 
 Set heart icons
@@ -86,6 +91,7 @@ Set heart icons
   ...
 {% endcase %}
 ```
+
 
 **Snippet**
 
@@ -132,6 +138,7 @@ Load Wishlist stylesheet
   @import '~stacklet-wishlist/src/wishlist';
 ```
 
+
 ### API Methods Examples
 
 **wishlist.init()**
@@ -143,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   wishlist().init();
 });
 ```
+
 
 **wishlist.addItem()**
 
@@ -158,11 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
 addItem(customerId, productId, callback, target);
 ```
 
+
 **wishlist.removeItem()**
 
-```js
-
+Example
+```liquid
+<div
+  class="wishlist-button wishlist-button--remove"
+  js-wishlist="remove"
+  data-product-id="${productId}"
+  data-customer-id="${customerId}">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon__close" viewBox="0 0 36 36">
+    <path d="M12.51 8.46l-3.17 3.17 1.62 1.62 4 4.08-4 4-1.62 1.55 3.17 3.24 1.62-1.62 4.07-4.07 4.01 4.07 1.55 1.62L27 22.88l-1.62-1.55-4.07-4 4.07-4.08L27 11.63l-3.24-3.17-1.55 1.62-4.01 4.01-4.07-4.01-1.62-1.62z"></path>
+  </svg>
+</div>
 ```
+
+```js
+removeItem(customerId, productId, callback, target);
+```
+
 
 **wishlist.getList()**
 
@@ -187,11 +210,13 @@ Create a `page.wishlist.liquid` file in `/src/templates`
 
 ```
 
+
 **wishlist.updateAddButtonsHeartStatus()**
 
 ```js
 
 ```
+
 
 **wishlist.setAddEventHandlerInQuickView()**
 
