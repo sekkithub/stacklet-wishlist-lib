@@ -8,6 +8,7 @@
 
 import axios from 'axios';
 import {on} from './utils';
+import wishlistLocalStorage from './wishlist-local-storage';
 
 /**
  * DOM selectors.
@@ -231,7 +232,6 @@ export default () => {
     lockButton(target);
 
     if (!customerId) {
-      window.location.href = '/account/login';
       return;
     }
 
@@ -405,9 +405,33 @@ export default () => {
   }
 
   /**
+   * Merge localstorage to remote Database.
+   */
+  function mergeLocalStorage() {
+    const wishlistArray = wishlistLocalStorage().getWishlist();
+    
+    if (wishlistArray === undefined || wishlistArray.length === 0) {
+      return;
+    }
+
+    const customerId = theme.customer.id;
+
+    wishlistArray.forEach((product) => {
+      addProduct(customerId, product.id, () => {
+        updateNavHeartStatus();
+        updateAddButtonsHeartStatus();
+      });
+    });
+
+    wishlistLocalStorage().clearProducts();
+  }
+
+  /**
    * Initialise component.
    */
   function init() {
+    mergeLocalStorage();
+
     updateNavHeartStatus();
     updateAddButtonsHeartStatus();
     setEventListeners();
