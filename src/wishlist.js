@@ -288,6 +288,14 @@ export default () => {
    * Set Event Handlers in Quick View.
    */
   function setAddEventHandlerInQuickView() {
+    if (!theme.customer.id) {
+      wishlistLocalStorage().updateAddButtonsHeartStatusInQuickview();
+      wishlistLocalStorage().setAddEventHandlerInQuickView();
+      return;
+    }
+
+    updateAddButtonsHeartStatus();
+
     const button = nodeSelectors.quickViewBody.querySelector(selectors.add);
     on('click', button, (event) => handleAddEvent(event));
   }
@@ -430,6 +438,13 @@ export default () => {
    * Initialise component.
    */
   function init() {
+    const customerId = theme.customer.id;
+
+    if (!customerId) {
+      wishlistLocalStorage().init();
+      return;
+    }
+
     mergeLocalStorage();
 
     updateNavHeartStatus();
