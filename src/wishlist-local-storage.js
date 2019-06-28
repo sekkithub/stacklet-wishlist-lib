@@ -7,7 +7,7 @@
  */
 
 import axios from 'axios';
-import {on} from '../helpers/utils';
+import {on} from './utils';
 
 /**
  * DOM selectors.
