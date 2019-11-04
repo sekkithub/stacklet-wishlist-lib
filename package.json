@@ -1,16 +1,22 @@
 {
-  "name": "stacklet-wishlist-lib",
-  "version": "2.0.1",
+  "name": "@we-make-websites/stylelint-config",
+  "version": "1.0.0",
   "main": "/src/wishlist.js",
-  "repository": "git@github.com:sekkithub/stacklet-wishlist-lib.git",
-  "author": "Masato Arai <masato.arai@wemakewebsites.com>",
-  "license": "MIT",
-  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/we-make-websites/stacklet-wishlist-lib"
+  },
   "keywords": [
     "stacklet",
-    "wishlist"
+    "wishlist",
+    "shopify",
+    "js"
   ],
-  "bugs": "https://github.com/sekkithub/stacklet-wishlist-lib/issues",
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "license": "MIT",
+  "bugs": "https://github.com/we-make-websites/stacklet-wishlist-lib/issues",
   "dependencies": {
     "axios": "^0.18.0"
   }
