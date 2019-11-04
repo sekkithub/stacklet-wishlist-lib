@@ -1,7 +1,7 @@
 {
   "name": "@we-make-websites/stacklet-wishlist-lib",
   "version": "1.0.0",
-  "main": "/src/wishlist.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/we-make-websites/stacklet-wishlist-lib.git"

@@ -8,7 +8,7 @@ Wishlist component built with Frame 3.
 **yarn**
 
 ```bash
-yarn add stacklet-wishlist-lib
+yarn add @we-make-websites/stacklet-wishlist-lib
 ```
 
 
@@ -52,7 +52,8 @@ theme-strings.liquid
   window.theme = {
     strings: {
     ...
-      noItemMessage: {{ 'products.product.no_item_message' | t | json }},
+      noItemMessage: {{ 'general.wishlist.no_item_message' | t | json }},
+      wishlistTemporaryMessage: {{ 'general.wishlist.temporary_wishlist_message' | t | json }},
     ...
     },
     customer: {
@@ -78,7 +79,7 @@ Load Wishlist stylesheet
   /**
   * Vendors.
   */
-  @import '~stacklet-wishlist/src/wishlist';
+  @import '~@we-make-websites/stacklet-wishlist-lib/src/wishlist';
 ```
 
 
@@ -108,7 +109,7 @@ icon-misc.liquid
 
 **Snippet**
 
-Copy `wishlist.liquid` file in ‘/node_modules/stacklet-wishlist/src/snippet.liquid’ and
+Copy `wishlist.liquid` file in ‘/node_modules/@we-make-websites/stacklet-wishlist-lib/src/snippet.liquid’ and
 paste it to in `/src/snippets`.
 
 
