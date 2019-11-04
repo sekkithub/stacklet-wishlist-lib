@@ -226,8 +226,8 @@ export default () => {
 
     updateNavHeartStatus();
     updateAddButtonsHeartStatus();
-    updateList(productId);
     setFallbackMessage();
+    updateList(productId);
   }
 
   /**
@@ -236,16 +236,23 @@ export default () => {
   function setFallbackMessage() {
     getWishlist();
 
-    if (wishlistArray.length !== 0 || !nodeSelectors.list) {
-      return;
+    console.log(nodeSelectors.list)
+
+    if (wishlistArray.length === 0) {
+      nodeSelectors.container.innerHTML = `
+        <p class="wishlist-notification__no-items">${theme.strings.noItemMessage}</p>
+      `;
+      return
     }
 
     const div = document.createElement('div');
+    div.classList.add('wishlist-notification');
     nodeSelectors.container.appendChild(div);
 
     div.innerHTML += `
-      <span>${theme.strings.noItemMessage}</span>
+      <p class="wishlist-notification__temporary-message">${theme.strings.wishlistTemporaryMessage}</p>
     `;
+    return;
   }
 
   /**
@@ -262,9 +269,8 @@ export default () => {
    * Construct Wishlist.
    */
   function constructList() {
-    getWishlist();
-
     const ul = document.createElement('ul');
+
     ul.classList.add('row', 'wishlist__list');
     ul.setAttribute('js-wishlist', 'list');
     nodeSelectors.loading.parentNode.removeChild(nodeSelectors.loading);
@@ -338,8 +344,9 @@ export default () => {
       return;
     }
 
-    constructList();
+    getWishlist();
     setFallbackMessage();
+    constructList();
     updateNavHeartStatus();
   }
 
@@ -357,6 +364,7 @@ export default () => {
    * Initialise component.
    */
   function init() {
+    console.log('init local storage');
     constructLocalStorage();
     updateAddButtonsHeartStatus();
     setEventListeners();

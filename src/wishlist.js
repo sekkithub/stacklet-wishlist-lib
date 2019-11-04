@@ -54,16 +54,16 @@ export default () => {
       },
     })
       .then((response) => {
-        console.log('Added to wishlist', {
+        console.log('Added to wishlist: ', {
           customerId: customerId,
           productId: productId,
         });
         
-        callback(target);
+        callback(response, target);
         return response;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return error;
       });
   }
@@ -92,18 +92,17 @@ export default () => {
         wishlist: customerId,
         product: productId,
       },
-    })
-      .then((response) => {
-        console.log('Removed from wishlist', {
+    }).then((response) => {
+        console.log('Removed from wishlist: ', {
           customerId: customerId,
           productId: productId,
         });
 
-        callback(target);
+        callback(response, target);
         return response;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return error;
       });
   }
@@ -123,7 +122,7 @@ export default () => {
         return response;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return error;
       });
   }
@@ -132,46 +131,71 @@ export default () => {
   /**
    * Set Header Icon.
    */
-  function updateNavHeartStatus() {
-    const customerId = theme.customer.id;
-    getList(customerId, (response) => {
-      const totalItems = response.data.resultsCount;
-      if (!totalItems || totalItems < 1) {
-        nodeSelectors.navHeartIconGroup.classList.remove('is-filled');
-      } else {
-        nodeSelectors.navHeartIconGroup.classList.add('is-filled');
-      }
-    });
+  function updateNavHeartStatus(response) {
+    const totalItems = response.data.resultsCount;
+    if (!totalItems || totalItems < 1) {
+      nodeSelectors.navHeartIconGroup.classList.remove('is-filled');
+    } else {
+      nodeSelectors.navHeartIconGroup.classList.add('is-filled');
+    }
   }
 
   /**
    * Filled a heart icon if the item is on Wishlist List.
    */
-  function updateAddButtonsHeartStatus() {
+  function updateAddButtonsHeartStatus(response) {
+    const customerId = theme.customer.id;
+
+
+    if (!customerId) {
+      return;
+    }
+
+    const { resultsCount } = response.data;
+
+    if(resultsCount === 0) { return; }
+
+    const { results } = response.data;
+    const productArray = [];
+
+    results.forEach((product) => {
+      const productId = Number(product.id.replace(/gid:\/\/shopify\/Product\//g, ''));
+      productArray.push(productId);
+    });
+
+    nodeSelectors.addButtons.forEach((button) => {
+      const productId = Number(button.getAttribute('data-product-id'));
+      if (productArray.indexOf(productId) > -1) {
+        button.classList.add('is-filled');
+      } else {
+        button.classList.remove('is-filled');
+      }
+    });
+  }
+
+
+  /**
+   * Removes a wishlisted product's active state.
+   * @param {Object} response - Request response object.
+   */
+  function removeAddButtonActiveStatus(response) {
     const customerId = theme.customer.id;
 
     if (!customerId) {
       return;
     }
 
-    getList(customerId, (response) => {
-      const products = response.data.results.data.nodes;
-      const productArray = [];
+    const { id } = response.data;
 
-      products.forEach((product) => {
-        const productId = Number(product.id.replace(/gid:\/\/shopify\/Product\//g, ''));
-        productArray.push(productId);
-      });
+    console.log(response)
 
-      nodeSelectors.addButtons.forEach((button) => {
-        const productId = Number(button.getAttribute('data-product-id'));
-        if (productArray.indexOf(productId) > -1) {
-          button.classList.add('is-filled');
-        } else {
-          button.classList.remove('is-filled');
-        }
-      });
-    });
+    nodeSelectors.addButtons.forEach((button) => {
+      const productId = Number(button.getAttribute('data-product-id'));
+      if (productId === Number(id)) {
+        button.classList.remove('is-filled');
+      }
+    })
+    
   }
 
   /**
@@ -198,9 +222,9 @@ export default () => {
         return;
       }
 
-      removeProduct(customerId, productId, () => {
-        updateNavHeartStatus();
-        updateAddButtonsHeartStatus();
+      removeProduct(customerId, productId, (response) => {
+        updateNavHeartStatus(response);
+        removeAddButtonActiveStatus(response);
         updateList(productId);
         setFallbackMessage();
       });
@@ -237,15 +261,14 @@ export default () => {
 
     if (target.classList.contains('is-filled')) {
       target.classList.remove('is-filled');
-      removeProduct(customerId, productId, (target) => {
-        updateNavHeartStatus();
+      removeProduct(customerId, productId, (response, target) => {
+        updateNavHeartStatus(response);
         unlockButton(target);
       }, target);
     } else {
       target.classList.add('is-filled');
-      addProduct(customerId, productId, (target) => {
-        updateNavHeartStatus();
-        updateAddButtonsHeartStatus();
+      addProduct(customerId, productId, (response, target) => {
+        updateNavHeartStatus(response);
         unlockButton(target);
       }, target);
     }
@@ -267,8 +290,8 @@ export default () => {
       return;
     }
 
-    removeProduct(customerId, productId, () => {
-      updateNavHeartStatus();
+    removeProduct(customerId, productId, (response) => {
+      updateNavHeartStatus(response);
       updateList(productId);
       setFallbackMessage();
     }, target);
@@ -288,13 +311,17 @@ export default () => {
    * Set Event Handlers in Quick View.
    */
   function setAddEventHandlerInQuickView() {
+    const customerId = theme.customer.id;
+
     if (!theme.customer.id) {
       wishlistLocalStorage().updateAddButtonsHeartStatusInQuickview();
       wishlistLocalStorage().setAddEventHandlerInQuickView();
       return;
     }
 
-    updateAddButtonsHeartStatus();
+    getList(customerId, (response) => {
+      updateAddButtonsHeartStatus(response);
+    });
 
     const button = nodeSelectors.quickViewBody.querySelector(selectors.add);
     on('click', button, (event) => handleAddEvent(event));
@@ -318,7 +345,7 @@ export default () => {
     nodeSelectors.container.appendChild(div);
 
     div.innerHTML += `
-      <span>${theme.strings.noItemMessage}</span>
+      <p class="wishlist-notification__no-items">${theme.strings.noItemMessage}</p>
     `;
   }
 
@@ -337,8 +364,9 @@ export default () => {
    * Construct Wishlist.
    */
   function constructList(response, customerId) {
-    const products = response.data.results.data.nodes;
+    const products = response.data.results;
     const ul = document.createElement('ul');
+
     ul.classList.add('row', 'wishlist__list');
     ul.setAttribute('js-wishlist', 'list');
     nodeSelectors.loading.parentNode.removeChild(nodeSelectors.loading);
@@ -350,7 +378,7 @@ export default () => {
       const productId = Number(id);
       const handle = product.handle;
       const link = `/products/${handle}`;
-      const featuredImage = product.imageS.transformedSrc;
+      const featuredImage = product.imageS;
       const title = product.title;
 
       const li = document.createElement('li');
@@ -396,39 +424,48 @@ export default () => {
   /**
    * Set Wishlist.
    */
-  function setList() {
+  function setList(response) {
     if (!nodeSelectors.container) {
+      return;
+    }
+
+    if (response.data.resultsCount === 0) {
+      showFallbackMessage();
+      nodeSelectors.loading.parentNode.removeChild(nodeSelectors.loading);
       return;
     }
 
     const customerId = theme.customer.id;
 
-    getList(customerId, (response, customerId) => {
-      constructList(response, customerId);
-      setRemoveEventHandlers();
-
-      setFallbackMessage();
-      updateNavHeartStatus();
-    });
+    constructList(response, customerId);
+    setRemoveEventHandlers();
+    setFallbackMessage();
+    updateNavHeartStatus(response);
   }
 
   /**
    * Merge localstorage to remote Database.
    */
-  function mergeLocalStorage() {
+  function mergeLocalStorage(responseList) {
     const wishlistArray = wishlistLocalStorage().getWishlist();
+    const customerId = theme.customer.id;
+    const { results } = responseList.data
     
     if (wishlistArray === undefined || wishlistArray.length === 0) {
+      console.log('no wishlist items in local storage')
       return;
     }
 
-    const customerId = theme.customer.id;
+    console.log(wishlistArray);
+    console.log(responseList);
 
     wishlistArray.forEach((product) => {
-      addProduct(customerId, product.id, () => {
-        updateNavHeartStatus();
-        updateAddButtonsHeartStatus();
-      });
+      const matchData = results.find((item) => item.id === product.id.toString())
+      if (matchData === undefined) {
+        addProduct(customerId, product.id, (response) => {
+          updateNavHeartStatus(response);
+        });
+      }
     });
 
     wishlistLocalStorage().clearProducts();
@@ -441,17 +478,21 @@ export default () => {
     const customerId = theme.customer.id;
 
     if (!customerId) {
+      console.log('Wishlist - customer not logged in');
       wishlistLocalStorage().init();
       return;
     }
 
-    mergeLocalStorage();
+    console.log('Wishlist - customer logged in');
 
-    updateNavHeartStatus();
-    updateAddButtonsHeartStatus();
-    setEventListeners();
-    setAddEventHandlers();
-    setList();
+    getList(customerId, (response) => {
+      mergeLocalStorage(response);
+      updateNavHeartStatus(response);
+      updateAddButtonsHeartStatus(response);
+      setEventListeners();
+      setAddEventHandlers();
+      setList(response);
+    });
   }
 
   /**
