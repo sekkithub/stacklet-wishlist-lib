@@ -1,10 +1,10 @@
 {
-  "name": "@we-make-websites/stylelint-config",
+  "name": "@we-make-websites/stacklet-wishlist-lib",
   "version": "1.0.0",
   "main": "/src/wishlist.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/we-make-websites/stacklet-wishlist-lib"
+    "url": "git+https://github.com/we-make-websites/stacklet-wishlist-lib.git"
   },
   "keywords": [
     "stacklet",
@@ -16,8 +16,18 @@
     "node": ">=8.10.0"
   },
   "license": "MIT",
-  "bugs": "https://github.com/we-make-websites/stacklet-wishlist-lib/issues",
+  "bugs": {
+    "url": "https://github.com/we-make-websites/stacklet-wishlist-lib/issues"
+  },
   "dependencies": {
     "axios": "^0.18.0"
+  },
+  "description": "Wishlist component built with Frame 3.",
+  "homepage": "https://github.com/we-make-websites/stacklet-wishlist-lib#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
